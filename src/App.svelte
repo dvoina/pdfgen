@@ -8,29 +8,54 @@
   let svg = "";
   let disabled;
 
+  let foreignObject = 
+  ` <foreignObject x="20" y="20" width="160" height="160">
+<div xmlns="http://www.w3.org/1999/xhtml">
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  Sed mollis mollis mi ut ultricies. Nullam magna ipsum,
+  porta vel dui convallis, rutrum imperdiet eros. Aliquam
+  erat volutpat.
+</div>`;
+
+
   onMount(() => {
-    canvas = new fabric.Canvas("c");
+    canvas = new fabric.Canvas("c", );
+    canvas.setWidth(800);
+    canvas.setHeight(600);
   })
+
+
+  function getRndColor() {
+    const choices=["red", "green", "blue", "orange", "pink"];
+    var index = Math.floor(Math.random() * choices.length);
+    return choices[index];
+  }
 
   function selectText() {
     console.log("text");
     let text = new fabric.Text("Lorem Ipsum");
+    text.fill = getRndColor();
     canvas.add(text);
+    canvas.setActiveObject(text);
   }
 
   function selectCircle() {
     console.log("circle");
-    let text = new fabric.Circle({color: "red", radius:"50"});
-    canvas.add(text);
+    let circle = new fabric.Circle({color: "red", radius:"50"});
+    circle.fill = getRndColor();
+    canvas.add(circle);
+    canvas.setActiveObject(circle);
   }
 
-  function notImplemented() {
-    alert("Not implemented yet.")
+  function selectTable() {
+    alert("we will insert a placeholder for a svg <foreignobject>");
+    // let text = new fabric.Object();
+    // canvas.add(text);  
   }
 
   function createSVG() {
-    svg = canvas.toSVG({viewbox: {x:0, y:0, width:300, height:400}, width:410, height:310});
-    console.log(svg);
+    svg = canvas.toSVG({viewbox: {x:0, y:0, width:300, height:400}, width:410, height:310, color:getRndColor()});
+    //svg.replace("{{FOREIGN_OBJECT}}", foreignObject)
   }
 
   async function createPDF() {
@@ -56,9 +81,9 @@
     <canvas id="c"></canvas>
     <div id="toolbox">
       <ul class="tools">
-        <li on:click={selectText}>Text</li>
-        <li on:click={notImplemented}>Table</li>
-        <li on:click={selectCircle}>Circle</li>
+        <li><button on:click={selectText}>Text</button></li>
+        <li><button on:click={selectTable}>Table</button></li>
+        <li><button on:click={selectCircle}>Circle</button></li>
       </ul>
     </div>
   </div>
@@ -80,10 +105,13 @@
   .tools > li {
     display:block;
     border: 1px solid purple;
-    width: 10mm;
+    width: 40mm;
     height: 10mm;
     margin: 1mm;
-
+  }
+  button {
+    width:35mm;
+    margin: 1mm;
   }
   .svg {
     display: flex;
@@ -95,3 +123,5 @@
     border: 1px solid purple;
   }
 </style>
+
+
